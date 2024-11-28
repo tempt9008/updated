@@ -1,7 +1,7 @@
-import { PDFWorker } from '@react-pdf/renderer';
+// Initialize PDF.js worker
+import { pdf } from '@react-pdf/renderer';
 
-// Configure PDF worker
+// Ensure PDF rendering works in all environments
 if (typeof window !== 'undefined') {
-  const worker = new PDFWorker();
-  worker.setup();
+  pdf.initWorker();
 }
