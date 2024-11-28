@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FileDown, Loader2 } from 'lucide-react';
-import { pdf } from '@react-pdf/renderer';
+import { pdf } from '../lib/pdf-worker';
 import { QuestionPDF } from './QuestionPDF';
 import { Question } from '../types';
 import toast from 'react-hot-toast';
