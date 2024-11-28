@@ -12,7 +12,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = (password: string) => {
-    if (password === '123') {
+    if (password === '12345') {
       setIsAuthenticated(true);
       return true;
     }
