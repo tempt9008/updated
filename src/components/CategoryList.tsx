@@ -146,7 +146,7 @@ export default function CategoryList() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, type: 'category', id: string) => {
+  const handleKeyPress = (e: React.KeyboardEvent, id: string) => {
     if (e.key === 'Enter') {
       handleUpdateCategoryName(id);
     } else if (e.key === 'Escape') {
@@ -195,7 +195,7 @@ export default function CategoryList() {
                         value={editingName}
                         onChange={(e) => setEditingName(e.target.value)}
                         onBlur={() => handleUpdateCategoryName(category.id)}
-                        onKeyDown={(e) => handleKeyPress(e, 'category', category.id)}
+                        onKeyDown={(e) => handleKeyPress(e, category.id)}
                         className="text-lg font-medium text-gray-900 border border-blue-500 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
