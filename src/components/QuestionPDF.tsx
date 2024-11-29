@@ -3,23 +3,23 @@ import { Question } from '../types';
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    fontSize: 12,
+    padding: 20,
+    fontSize: 15,
     fontFamily: 'Baloo', // Updated to use Kannada font
   },
   title: {
     fontSize: 18,
-    marginBottom: 30,
+    marginBottom: 5,
     textAlign: 'center',
     fontFamily: 'Baloo', // Updated to use Kannada font
   },
   questionContainer: {
-    marginBottom: 25,
+    marginBottom: 5,
     breakInside: 'avoid',
   },
   questionText: {
-    fontSize: 12,
-    marginBottom: 10,
+    fontSize: 14,
+    marginBottom: 5,
     fontFamily: 'Baloo', // Updated to use Kannada font
     lineHeight: 1.4,
   },
@@ -30,27 +30,27 @@ const styles = StyleSheet.create({
     fontFamily: 'Baloo', // Updated to use Kannada font
   },
   imageContainer: {
-    marginBottom: 15,
+    marginBottom: 5,
     maxHeight: 200,
     alignItems: 'center',
   },
   questionImage: {
     objectFit: 'contain',
-    maxWidth: '80%',
-    maxHeight: 180,
+    maxWidth: '60%',
+    maxHeight: 120,
   },
   options: {
     marginLeft: 20,
-    marginTop: 8,
+    marginTop: 3,
   },
   option: {
-    marginBottom: 8,
-    fontSize: 11,
+    marginBottom: 3,
+    fontSize: 12,
     lineHeight: 1.3,
     fontFamily: 'Baloo', // Updated to use Kannada font
   },
   answerSection: {
-    marginTop: 40,
+    marginTop: 20,
     borderTopWidth: 1,
     borderTopColor: '#999',
     paddingTop: 20,
