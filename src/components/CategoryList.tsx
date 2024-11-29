@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Layout, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Layout, Pencil, Plus, Trash2, FolderOpen } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Category, Question } from '../types';
+import { Category, Question, Folder } from '../types';
 import { CreateCategoryDialog } from './CreateCategoryDialog';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import QuestionList from './QuestionList';
@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 
 export default function CategoryList() {
   const { folderId } = useParams<{ folderId: string }>();
+  const [folderName, setFolderName] = useState<string>('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -22,16 +23,32 @@ export default function CategoryList() {
 
   useEffect(() => {
     if (folderId) {
+      fetchFolderName();
       fetchCategories();
     }
   }, [folderId]);
 
   useEffect(() => {
-    // Fetch questions for all categories
     categories.forEach(category => {
       fetchCategoryQuestions(category.id);
     });
   }, [categories]);
+
+  const fetchFolderName = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('folders')
+        .select('name')
+        .eq('id', folderId)
+        .single();
+
+      if (error) throw error;
+      setFolderName(data.name);
+    } catch (error) {
+      toast.error('Error loading folder information');
+      console.error('Error:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     if (!folderId) return;
@@ -160,6 +177,14 @@ export default function CategoryList() {
 
   return (
     <div>
+      {/* Folder Name Header */}
+      <div className="mb-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center">
+          <FolderOpen className="h-8 w-8 text-blue-600 mr-3" />
+          <h1 className="text-3xl font-bold text-gray-900">{folderName}</h1>
+        </div>
+      </div>
+
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
         <button
@@ -175,7 +200,7 @@ export default function CategoryList() {
         {categories.map((category) => (
           <div
             key={category.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200"
+            className="group bg-white rounded-lg shadow-sm border border-gray-200"
           >
             <div
               className="p-6 cursor-pointer"
@@ -201,27 +226,25 @@ export default function CategoryList() {
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <div className="flex items-center">
-                        <h3 className="text-lg font-medium text-gray-900">
-                          {category.name}
-                        </h3>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startEditing(category);
-                          }}
-                          className="ml-2 p-1 opacity-0 group-hover:opacity-100 hover:bg-gray-100 rounded-full transition-opacity"
-                        >
-                          <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-600" />
-                        </button>
-                      </div>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {category.name}
+                      </h3>
                     )}
                     <p className="text-sm text-gray-500">
                       {new Date(category.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startEditing(category);
+                    }}
+                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
                   {categoryQuestions[category.id]?.length > 0 && (
                     <PDFDownloadButton
                       title={`${category.name} Questions`}
@@ -234,9 +257,9 @@ export default function CategoryList() {
                       setSelectedCategory(category);
                       setIsDeleteDialogOpen(true);
                     }}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-gray-100 rounded-full transition-colors opacity-0 group-hover:opacity-100"
                   >
-                    <Trash2 className="h-5 w-5 text-gray-500 hover:text-red-600" />
+                    <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               </div>
