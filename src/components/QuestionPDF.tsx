@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   answerLine: {
     marginBottom: 8,
+    marginTop: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#999',
     borderBottomStyle: 'dotted',
