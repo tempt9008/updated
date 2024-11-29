@@ -166,7 +166,7 @@ export default function FolderList() {
           >
             <div className="flex justify-between items-start">
               <div 
-                className="flex items-start space-x-3 flex-1"
+                className="flex items-start space-x-3 flex-1 cursor-pointer"
                 onClick={() => editingFolderId !== folder.id && navigate(`/admin/folders/${folder.id}`)}
               >
                 <FolderPlus className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
@@ -180,29 +180,28 @@ export default function FolderList() {
                       onKeyDown={(e) => handleKeyPress(e, folder.id)}
                       className="w-full px-2 py-1 text-lg font-medium text-gray-900 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                       autoFocus
+                      onClick={(e) => e.stopPropagation()}
                     />
                   ) : (
-                    <div className="flex items-center">
-                      <h3 className="text-lg font-medium text-gray-900 truncate">
-                        {folder.name}
-                      </h3>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startEditing(folder);
-                        }}
-                        className="ml-2 p-1 opacity-0 group-hover:opacity-100 hover:bg-gray-100 rounded-full transition-opacity"
-                      >
-                        <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-600" />
-                      </button>
-                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 truncate">
+                      {folder.name}
+                    </h3>
                   )}
                   <p className="text-sm text-gray-500">
                     {new Date(folder.created_at).toLocaleDateString()}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center space-x-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startEditing(folder);
+                  }}
+                  className="p-2 opacity-0 group-hover:opacity-100 hover:bg-gray-100 rounded-full transition-opacity"
+                >
+                  <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-600" />
+                </button>
                 {folderQuestions[folder.id]?.length > 0 && (
                   <PDFDownloadButton
                     title={`${folder.name} Questions`}
