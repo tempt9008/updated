@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout, Pencil, Plus, Trash2, FolderOpen } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Category, Question, Folder } from '../types';
+import { Category, Question } from '../types';
 import { CreateCategoryDialog } from './CreateCategoryDialog';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import QuestionList from './QuestionList';
