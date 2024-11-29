@@ -5,13 +5,13 @@ const styles = StyleSheet.create({
   page: {
     padding: 40,
     fontSize: 12,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   title: {
     fontSize: 18,
     marginBottom: 30,
     textAlign: 'center',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   questionContainer: {
     marginBottom: 25,
@@ -20,14 +20,14 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 12,
     marginBottom: 10,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Baloo', // Updated to use Kannada font
     lineHeight: 1.4,
   },
   questionStatus: {
     fontSize: 10,
     marginBottom: 5,
     color: '#666666',
-    fontFamily: 'Helvetica-Oblique',
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   imageContainer: {
     marginBottom: 15,
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 11,
     lineHeight: 1.3,
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   answerSection: {
     marginTop: 40,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   answerTitle: {
     fontSize: 14,
     marginBottom: 15,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   answerKey: {
     flexDirection: 'row',
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 11,
     lineHeight: 1.3,
+    fontFamily: 'Baloo', // Updated to use Kannada font
   },
   answerLine: {
     marginBottom: 8,
