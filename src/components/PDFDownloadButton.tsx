@@ -12,6 +12,16 @@ interface PDFDownloadButtonProps {
   onlyActive?: boolean;
 }
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 export default function PDFDownloadButton({
   title,
   questions,
@@ -36,8 +46,11 @@ export default function PDFDownloadButton({
         return;
       }
 
+      // Shuffle the questions
+      const shuffledQuestions = shuffleArray(filteredQuestions);
+
       // Check for image questions
-      const imageQuestions = filteredQuestions.filter(q => q.type === 'image' && q.image_url);
+      const imageQuestions = shuffledQuestions.filter(q => q.type === 'image' && q.image_url);
       if (imageQuestions.length > 0) {
         toast.loading('Processing images...', { id: 'image-processing' });
         
@@ -62,7 +75,7 @@ export default function PDFDownloadButton({
       const blob = await pdf(
         <QuestionPDF
           title={title}
-          questions={filteredQuestions}
+          questions={shuffledQuestions}
           includeAnswers={includeAnswers}
         />
       ).toBlob();
