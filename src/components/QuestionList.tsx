@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HelpCircle, Pencil, Plus, Trash2, Copy } from 'lucide-react';
+import { Pencil, Plus, Trash2, Copy } from 'lucide-react';
 import { Switch } from '@headlessui/react';
 import { supabase } from '../lib/supabase';
 import { Question } from '../types';
@@ -95,11 +95,9 @@ export default function QuestionList({ categoryId }: QuestionListProps) {
   };
 
   const handleToggleStatus = async (question: Question) => {
-    // If already toggling this question, return early
     if (togglingQuestionIds.has(question.id)) return;
 
     try {
-      // Add question ID to toggling set
       setTogglingQuestionIds(prev => new Set(prev).add(question.id));
       
       const newStatus = !question.is_active;
@@ -113,7 +111,6 @@ export default function QuestionList({ categoryId }: QuestionListProps) {
 
       if (error) throw error;
 
-      // Update local state with the response from the server
       setQuestions(prev =>
         prev.map(q => (q.id === question.id ? data : q))
       );
@@ -123,10 +120,8 @@ export default function QuestionList({ categoryId }: QuestionListProps) {
       );
     } catch (error) {
       console.error('Error updating question status:', error);
-      // Revert the local state change
       toast.error('Error updating question status');
     } finally {
-      // Remove question ID from toggling set
       setTogglingQuestionIds(prev => {
         const newSet = new Set(prev);
         newSet.delete(question.id);
@@ -215,7 +210,7 @@ export default function QuestionList({ categoryId }: QuestionListProps) {
       </div>
 
       <div className="space-y-4">
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <div
             key={question.id}
             className={`bg-white shadow-sm rounded-lg border ${
@@ -224,9 +219,11 @@ export default function QuestionList({ categoryId }: QuestionListProps) {
           >
             <div className="flex justify-between items-start">
               <div className="flex items-start space-x-3">
-                <HelpCircle className={`h-5 w-5 ${
-                  question.is_active ? 'text-blue-600' : 'text-gray-400'
-                } mt-0.5`} />
+                <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
+                  question.is_active ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'
+                }`}>
+                  <span className="font-medium text-sm">{index + 1}</span>
+                </div>
                 <div>
                   <h4 className={`text-base font-medium ${
                     question.is_active ? 'text-gray-900' : 'text-gray-500'
