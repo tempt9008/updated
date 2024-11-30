@@ -35,7 +35,7 @@ export default function QuizSession({ categoryId }: QuizSessionProps) {
       
       // Randomly select 10 questions or all if less than 10
       const shuffled = data.sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, Math.min(10, shuffled.length));
+      const selected = shuffled.slice(0, Math.min(50, shuffled.length));
       setQuestions(selected);
     } catch (error) {
       toast.error('Error loading questions');
