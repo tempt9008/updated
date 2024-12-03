@@ -11,7 +11,6 @@ interface PDFDownloadButtonProps {
   questions: Question[];
   includeAnswers?: boolean;
   onlyActive?: boolean;
-  folderId?: string; // Kept for potential future use
 }
 
 // Fisher-Yates shuffle algorithm
@@ -34,7 +33,6 @@ export default function PDFDownloadButton({
   questions,
   includeAnswers = true,
   onlyActive = false,
-  folderId, // eslint-disable-next-line @typescript-eslint/no-unused-vars
 }: PDFDownloadButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
