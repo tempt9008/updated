@@ -5,13 +5,21 @@ const styles = StyleSheet.create({
   page: {
     padding: 20,
     fontSize: 15,
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
   },
   title: {
     fontSize: 18,
-    marginBottom: 5,
+    marginBottom: 20,
     textAlign: 'center',
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
+  },
+  categoryTitle: {
+    fontSize: 16,
+    marginTop: 15,
+    marginBottom: 10,
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    fontFamily: 'Baloo',
   },
   questionContainer: {
     marginBottom: 5,
@@ -20,14 +28,14 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 14,
     marginBottom: 5,
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
     lineHeight: 1.4,
   },
   questionStatus: {
     fontSize: 10,
     marginBottom: 5,
     color: '#666666',
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
   },
   imageContainer: {
     marginBottom: 5,
@@ -47,29 +55,45 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     fontSize: 12,
     lineHeight: 1.3,
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
   },
   answerSection: {
-    marginTop: 20,
+    marginTop: 30,
     borderTopWidth: 1,
     borderTopColor: '#999',
     paddingTop: 20,
   },
   answerTitle: {
-    fontSize: 14,
+    fontSize: 16,
     marginBottom: 15,
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    fontFamily: 'Baloo',
+    textAlign: 'center',
+  },
+  categoryAnswers: {
+    marginTop: 15,
+    marginBottom: 20,
+    pageBreakInside: 'avoid',
+  },
+  categoryAnswerTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    fontFamily: 'Baloo',
+    backgroundColor: '#f5f5f5',
+    padding: 5,
   },
   answerKey: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: 5,
   },
   answer: {
-    width: '50%',
+    width: '45%',
     marginBottom: 8,
     fontSize: 11,
-    lineHeight: 1.3,
-    fontFamily: 'Baloo', // Updated to use Kannada font
+    lineHeight: 1.4,
+    fontFamily: 'Baloo',
+    padding: 2,
   },
   answerLine: {
     marginBottom: 8,
@@ -82,76 +106,95 @@ const styles = StyleSheet.create({
 
 interface QuestionPDFProps {
   title: string;
-  questions: Question[];
+  categorizedQuestions: Array<{
+    categoryName: string;
+    questions: Question[];
+  }>;
   includeAnswers?: boolean;
 }
 
-export const QuestionPDF = ({ title, questions, includeAnswers = true }: QuestionPDFProps) => (
+export const QuestionPDF = ({ 
+  title, 
+  categorizedQuestions,
+  includeAnswers = true 
+}: QuestionPDFProps) => (
   <Document>
+    {/* Questions Page */}
     <Page size="A4" style={styles.page}>
       <Text style={styles.title}>{title}</Text>
 
-      {/* Questions Section */}
-      {questions.map((question, index) => (
-        <View key={question.id} style={styles.questionContainer} wrap={false}>
-          {!question.is_active && (
-            <Text style={styles.questionStatus}>(Inactive Question)</Text>
-          )}
-          <Text style={styles.questionText}>
-            {index + 1}. {question.question}
-          </Text>
+      {categorizedQuestions.map((category, categoryIndex) => (
+        <View key={categoryIndex}>
+          <Text style={styles.categoryTitle}>{category.categoryName}</Text>
+          {category.questions.map((question, index) => (
+            <View key={`${categoryIndex}-${index}`} style={styles.questionContainer} wrap={false}>
+              {!question.is_active && (
+                <Text style={styles.questionStatus}>(Inactive Question)</Text>
+              )}
+              <Text style={styles.questionText}>
+                {index + 1}. {question.question}
+              </Text>
 
-          {question.type === 'image' && question.image_url && (
-            <View style={styles.imageContainer}>
-              <Image
-                src={question.image_url}
-                style={styles.questionImage}
-                cache={false}
-              />
+              {question.type === 'image' && question.image_url && (
+                <View style={styles.imageContainer}>
+                  <Image
+                    src={question.image_url}
+                    style={styles.questionImage}
+                    cache={false}
+                  />
+                </View>
+              )}
+
+              {question.type === 'text' && (
+                <View style={styles.answerLine} />
+              )}
+
+              {question.type === 'multichoice' && question.options && (
+                <View style={styles.options}>
+                  {question.options.map((option, optIndex) => (
+                    <Text key={optIndex} style={styles.option}>
+                      {String.fromCharCode(97 + optIndex)}. {option}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+              {question.type === 'truefalse' && (
+                <View style={styles.options}>
+                  <Text style={styles.option}>a. True</Text>
+                  <Text style={styles.option}>b. False</Text>
+                </View>
+              )}
+
+              {question.type === 'image' && (
+                <View style={styles.answerLine} />
+              )}
             </View>
-          )}
+          ))}
+        </View>
+      ))}
+    </Page>
 
-          {question.type === 'text' && (
-            <View style={styles.answerLine} />
-          )}
-
-          {question.type === 'multichoice' && question.options && (
-            <View style={styles.options}>
-              {question.options.map((option, optIndex) => (
-                <Text key={optIndex} style={styles.option}>
-                  {String.fromCharCode(97 + optIndex)}. {option}
+    {/* Answer Key Page */}
+    {includeAnswers && categorizedQuestions.length > 0 && (
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.answerTitle}>Answer Key</Text>
+        {categorizedQuestions.map((category, categoryIndex) => (
+          <View key={`answers-${categoryIndex}`} style={styles.categoryAnswers}>
+            <Text style={styles.categoryAnswerTitle}>{category.categoryName}</Text>
+            <View style={styles.answerKey}>
+              {category.questions.map((question, index) => (
+                <Text key={`${categoryIndex}-${index}`} style={styles.answer}>
+                  {index + 1}. {question.correct_answer}
+                  {!question.is_active ? ' (Inactive)' : ''}
                 </Text>
               ))}
             </View>
-          )}
-
-          {question.type === 'truefalse' && (
-            <View style={styles.options}>
-              <Text style={styles.option}>a. True</Text>
-              <Text style={styles.option}>b. False</Text>
-            </View>
-          )}
-
-          {question.type === 'image' && (
-            <View style={styles.answerLine} />
-          )}
-        </View>
-      ))}
-
-      {/* Answer Key Section */}
-      {includeAnswers && questions.length > 0 && (
-        <View style={styles.answerSection} wrap={false}>
-          <Text style={styles.answerTitle}>Answer Key:</Text>
-          <View style={styles.answerKey}>
-            {questions.map((question, index) => (
-              <Text key={question.id} style={styles.answer}>
-                {index + 1}. {question.correct_answer}
-                {!question.is_active ? ' (Inactive)' : ''}
-              </Text>
-            ))}
           </View>
-        </View>
-      )}
-    </Page>
+        ))}
+      </Page>
+    )}
   </Document>
 );
+</boltArtifact>
+
